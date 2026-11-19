@@ -1,0 +1,26 @@
+# ── Hasil build C ─────────────────────────────────────────────────────
+daos
+daos.exe
+*.o
+*.obj
+*.a
+*.so
+*.out
+
+# ── Artefak test ──────────────────────────────────────────────────────
+/tmp/daos-demo-output.txt
+test-results/
+playwright-report/
+
+# ── Node (landing statis: html-validate + Playwright, dev-only) ───────
+node_modules/
+package-lock.json
+
+# ── Editor & OS ───────────────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*~
+.vscode/
+.idea/

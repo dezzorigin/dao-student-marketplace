@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>DAOS — Sistem Alokasi Kantong Darah</title>
+<meta name="description" content="Program CLI C (UAS Praktikum Struktur Data dan Algoritma B) yang mengalokasikan kantong darah dengan Double Priority Queue: pasien paling kritis dilayani dulu, kantong hampir kedaluwarsa dipakai dulu.">
+<meta property="og:title" content="DAOS — Sistem Alokasi Kantong Darah">
+<meta property="og:description" content="Double Priority Queue di C murni: antrean pasien Max-Heap berdasarkan triage, stok darah Min-Heap berdasarkan sisa hari, alokasi Linear Search + Greedy dengan aturan ABO.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://dao-student-marketplace.pages.dev/">
+<meta property="og:image" content="https://dao-student-marketplace.pages.dev/og-image.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="DAOS — Sistem Alokasi Kantong Darah">
+<meta name="twitter:description" content="Pasien paling kritis dilayani dulu. Kantong hampir kedaluwarsa dipakai dulu. Program CLI C, Double Priority Queue, aturan ABO.">
+<meta name="twitter:image" content="https://dao-student-marketplace.pages.dev/og-image.png">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=IBM+Plex+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<header class="topbar">
+  <a class="brand" href="#atas" aria-label="DAOS — ke atas">
+    <svg width="26" height="26" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 2.5c3.2 4.1 6 7.6 6 11a6 6 0 1 1-12 0c0-3.4 2.8-6.9 6-11Z" stroke="#C0392B" stroke-width="1.8" stroke-linejoin="round"/><path d="M9.5 13.5a2.6 2.6 0 0 0 2.5 2.7" stroke="#C0392B" stroke-width="1.8" stroke-linecap="round"/></svg>
+    <span class="brand-name">DAOS</span>
+    <span class="brand-sub">Sistem Alokasi Kantong Darah</span>
+  </a>
+  <nav aria-label="Navigasi utama">
+    <a href="#papan">Papan triase</a>
+    <a href="#kantong">Kantong</a>
+    <a href="#cara-kerja">Cara kerja</a>
+    <a href="#sesi">Sesi demo</a>
+    <a href="#instalasi">Instalasi</a>
+  </nav>
+  <a class="btn btn-primary top-cta" href="#sesi">Jalankan sesi demo</a>
+</header>
+
+<main id="atas">
+  <!-- ══ Hero + papan triase ══ -->
+  <section class="hero" aria-labelledby="judul">
+    <div class="hero-copy">
+      <p class="kicker">UAS · Praktikum Struktur Data &amp; Algoritma B · SDG 3</p>
+      <h1 id="judul">Darah yang paling kritis, dilayani dulu. Darah yang hampir kedaluwarsa, dipakai dulu.</h1>
+      <p class="lede">DAOS adalah program CLI C murni yang mengatur antrean pasien
+      dan stok kantong darah dengan <strong>Double Priority Queue</strong> —
+      Max-Heap untuk pasien berdasarkan triage, Min-Heap untuk darah
+      berdasarkan sisa hari. Satu eksekusi alokasi: Linear Search mencari
+      kantong yang kompatibel (aturan ABO), Greedy memilih yang sisa
+      harinya terkecil.</p>
+      <div class="hero-actions">
+        <a class="btn btn-primary" href="#sesi">Lihat sesi demo asli</a>
+        <a class="btn btn-ghost" href="docs/PRD.md">Baca PRD</a>
+      </div>
+      <p class="honest">Nama repo <code>dao-student-marketplace</code> menyesatkan:
+      ini <strong>bukan</strong> marketplace mahasiswa — ini sistem alokasi
+      darah. Semua nama pasien di halaman ini data contoh (fiktif).</p>
+    </div>
+
+    <div class="board" id="papan" aria-label="Papan triase — contoh dari sesi demo">
+      <div class="board-head">
+        <h2>Papan triase</h2>
+        <span class="board-tag">contoh · data fiktif</span>
+      </div>
+      <ol class="ladder">
+        <li class="rung rung-1">
+          <span class="triage-num">1</span>
+          <span class="rung-body"><strong>Budi Santoso</strong><span class="rung-meta">Gol O · Darurat</span></span>
+          <span class="chip chip-critical">KRITIS EKSTREM</span>
+        </li>
+        <li class="rung rung-2">
+          <span class="triage-num">2</span>
+          <span class="rung-body"><strong>Ayu Lestari</strong><span class="rung-meta">Gol B</span></span>
+          <span class="chip chip-high">KRITIS</span>
+        </li>
+        <li class="rung rung-4">
+          <span class="triage-num">4</span>
+          <span class="rung-body"><strong>Citra Dewi</strong><span class="rung-meta">Gol A</span></span>
+          <span class="chip chip-low">KURANG MENDESAK</span>
+        </li>
+      </ol>
+      <div class="board-foot">
+        <p>Urutan antrean = urutan array Max-Heap setelah tiga pasien masuk.
+        Budi (triage 1 + darurat) duduk di root — dia yang dilayani pertama.</p>
+        <a href="#cara-kerja">Kenapa urutannya begini →</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ Kantong di rak ══ -->
+  <section class="bags" id="kantong" aria-labelledby="judul-kantong">
+    <div class="section-head">
+      <h2 id="judul-kantong">Kantong di rak</h2>
+      <p>Tiga kantong contoh dari sesi demo. Label gantungnya menunjukkan golongan,
+      sisa hari, dan nasibnya setelah dua kali eksekusi alokasi.</p>
+    </div>
+    <div class="bag-row">
+      <article class="bag bag-urgent">
+        <span class="bag-hole" aria-hidden="true"></span>
+        <svg class="bag-drop" width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 2.5c3.2 4.1 6 7.6 6 11a6 6 0 1 1-12 0c0-3.4 2.8-6.9 6-11Z" stroke="#C0392B" stroke-width="1.8" stroke-linejoin="round"/></svg>
+        <p class="bag-id">D001</p>
+        <p class="bag-blood">Gol O</p>
+        <div class="expiry" role="img" aria-label="Sisa 3 hari dari 365 hari">
+          <div class="expiry-bar" style="--fill: 1%; --bar: #C0392B"></div>
+        </div>
+        <p class="bag-days"><strong>3 hari</strong> tersisa — hampir kedaluwarsa</p>
+        <p class="bag-fate fate-done">Dialokasikan ke P002 (Budi Santoso)</p>
+      </article>
+      <article class="bag">
+        <span class="bag-hole" aria-hidden="true"></span>
+        <svg class="bag-drop" width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 2.5c3.2 4.1 6 7.6 6 11a6 6 0 1 1-12 0c0-3.4 2.8-6.9 6-11Z" stroke="#5B6770" stroke-width="1.8" stroke-linejoin="round"/></svg>
+        <p class="bag-id">D002</p>
+        <p class="bag-blood">Gol B</p>
+        <div class="expiry" role="img" aria-label="Sisa 30 hari dari 365 hari">
+          <div class="expiry-bar" style="--fill: 8%; --bar: #5B6770"></div>
+        </div>
+        <p class="bag-days"><strong>30 hari</strong> tersisa</p>
+        <p class="bag-fate fate-done">Dialokasikan ke P001 (Ayu Lestari)</p>
+      </article>
+      <article class="bag">
+        <span class="bag-hole" aria-hidden="true"></span>
+        <svg class="bag-drop" width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 2.5c3.2 4.1 6 7.6 6 11a6 6 0 1 1-12 0c0-3.4 2.8-6.9 6-11Z" stroke="#2F6B4F" stroke-width="1.8" stroke-linejoin="round"/></svg>
+        <p class="bag-id">D003</p>
+        <p class="bag-blood">Gol A</p>
+        <div class="expiry" role="img" aria-label="Sisa 12 hari dari 365 hari">
+          <div class="expiry-bar" style="--fill: 3%; --bar: #2F6B4F"></div>
+        </div>
+        <p class="bag-days"><strong>12 hari</strong> tersisa</p>
+        <p class="bag-fate fate-wait">Masih di rak — menunggu pasien gol A</p>
+      </article>
+    </div>
+    <p class="bags-note">Greedy memilih sisa hari <em>terkecil</em> di antara kantong yang
+    kompatibel — jadi D001 (3 hari) tidak dibiarkan basi di rak sementara D002
+    (30 hari) masih aman. Bar di atas = sisa hari relatif terhadap 365 hari.</p>
+  </section>
+
+  <!-- ══ Cara kerja ══ -->
+  <section class="how" id="cara-kerja" aria-labelledby="judul-cara">
+    <div class="section-head">
+      <h2 id="judul-cara">Cara kerja — satu kali eksekusi alokasi</h2>
+      <p>Menu 3, sekali tekan, satu pasien + satu kantong. Tidak ada langkah
+      tersembunyi: ini persis isi fungsi <code>cari_dan_alokasi_darah()</code>.</p>
+    </div>
+    <ol class="steps">
+      <li class="step">
+        <span class="step-num" aria-hidden="true">1</span>
+        <div><h3>Peek root Max-Heap</h3>
+        <p>Pasien prioritas tertinggi dibaca tanpa dikeluarkan dulu. Kalau
+        antrean atau stok kosong, alokasi ditolak di sini.</p></div>
+      </li>
+      <li class="step">
+        <span class="step-num" aria-hidden="true">2</span>
+        <div><h3>Linear Search + aturan ABO</h3>
+        <p>Seluruh stok dipindai: AB terima semua; A terima A/O; B terima
+        B/O; O hanya terima O. Tidak ada yang kompatibel → <code>[GAGAL]</code>,
+        pasien tetap menunggu.</p></div>
+      </li>
+      <li class="step">
+        <span class="step-num" aria-hidden="true">3</span>
+        <div><h3>Greedy: sisa hari terkecil</h3>
+        <p>Dari kantong yang kompatibel, yang dipilih adalah yang paling
+        cepat kedaluwarsa. Satu alokasi = O(n) atas stok.</p></div>
+      </li>
+      <li class="step">
+        <span class="step-num" aria-hidden="true">4</span>
+        <div><h3>Dequeue keduanya, catat riwayat</h3>
+        <p>Pasien dan kantong keluar dari heap masing-masing, transaksi
+        dicatat (<code>#001 | Pasien: … -&gt; Darah: D…</code>), lalu
+        <code>[SUKSES]</code> dicetak.</p></div>
+      </li>
+    </ol>
+  </section>
+
+  <!-- ══ Cek ABO interaktif ══ -->
+  <section class="abo" aria-labelledby="judul-abo">
+    <div class="section-head">
+      <h2 id="judul-abo">Cek kompatibilitas ABO</h2>
+      <p>Logika yang sama dengan <code>is_kompatibel()</code> di <code>src/uas.c</code> —
+      pilih golongan pasien dan golongan kantong, lihat hasilnya.</p>
+    </div>
+    <form class="abo-form" id="abo-form">
+      <label> Golongan pasien
+        <select id="abo-pasien" name="pasien">
+          <option value="A">A</option>
+          <option value="B">B</option>
+          <option value="AB" selected>AB</option>
+          <option value="O">O</option>
+        </select>
+      </label>
+      <span class="abo-arrow" aria-hidden="true">→</span>
+      <label> Golongan kantong
+        <select id="abo-kantong" name="kantong">
+          <option value="A">A</option>
+          <option value="B">B</option>
+          <option value="AB">AB</option>
+          <option value="O" selected>O</option>
+        </select>
+      </label>
+      <p class="abo-result" id="abo-result" role="status" aria-live="polite"></p>
+    </form>
+  </section>
+
+  <!-- ══ Sesi demo asli ══ -->
+  <section class="session" id="sesi" aria-labelledby="judul-sesi">
+    <div class="section-head">
+      <h2 id="judul-sesi">Sesi demo asli</h2>
+      <p>Output verbatim dari <code>make demo</code> (gcc 13.3.0, satu kali jalan).
+      Ketikan tidak tampil karena stdin di-redirect dari
+      <code>scripts/demo-input.txt</code> — baris-baris di bawah ini persis
+      yang dicetak program. <a href="docs/contoh-sesi.txt">Output lengkap 162 baris →</a></p>
+    </div>
+    <div class="terminal" role="region" aria-label="Output sesi demo DAOS">
+      <div class="terminal-bar">
+        <span class="dot" aria-hidden="true"></span><span class="dot" aria-hidden="true"></span><span class="dot" aria-hidden="true"></span>
+        <span class="terminal-title">./daos &lt; scripts/demo-input.txt</span>
+        <button class="copy-btn" type="button" data-copy="./daos &lt; scripts/demo-input.txt" aria-label="Salin perintah demo">Salin</button>
+      </div>
+<pre class="terminal-body">============================================================
+  DAOS - SISTEM ALOKASI KANTONG DARAH
+  Data Analysis &amp; Optimization System
+  Berbasis Tingkat Kritis (Triage) &amp; Kedaluwarsa
+============================================================
+
+  Pasien Prioritas Tertinggi: Budi Santoso (Gol: O)
+------------------------------------------------------------
+  [SUKSES] Kantong D001 dialokasikan ke Pasien P002.
+
+  Pasien Prioritas Tertinggi: Ayu Lestari (Gol: B)
+------------------------------------------------------------
+  [SUKSES] Kantong D002 dialokasikan ke Pasien P001.
+
+  [ANTREAN PASIEN]
+  1. P003 | Citra Dewi | Gol: A | Triage: 4 | Darurat: Tidak
+
+  [STOK KANTONG DARAH]
+  1. D003 | Gol: A | Sisa: 12 hari
+
+  RIWAYAT TRANSAKSI
+  #001 | Pasien: Budi Santoso -&gt; Darah: D001
+  #002 | Pasien: Ayu Lestari -&gt; Darah: D002
+
+  Program dihentikan. Total transaksi: 2.</pre>
+    </div>
+  </section>
+
+  <!-- ══ Instalasi ══ -->
+  <section class="install" id="instalasi" aria-labelledby="judul-instalasi">
+    <div class="section-head">
+      <h2 id="judul-instalasi">Instalasi — tiga perintah</h2>
+      <p>Butuh <code>gcc</code> (diuji 13.3.0) dan <code>make</code>. Tanpa
+      dependensi lain, tanpa jaringan, tanpa database.</p>
+    </div>
+    <div class="cmd-list">
+      <div class="cmd">
+        <code>make</code>
+        <span>kompilasi binary <code>./daos</code></span>
+        <button class="copy-btn" type="button" data-copy="make" aria-label="Salin perintah make">Salin</button>
+      </div>
+      <div class="cmd">
+        <code>./daos</code>
+        <span>masuk menu utama</span>
+        <button class="copy-btn" type="button" data-copy="./daos" aria-label="Salin perintah jalankan">Salin</button>
+      </div>
+      <div class="cmd">
+        <code>make test</code>
+        <span>smoke test: 6 kelompok assert atas output program</span>
+        <button class="copy-btn" type="button" data-copy="make test" aria-label="Salin perintah test">Salin</button>
+      </div>
+    </div>
+    <p class="install-note">Semua data in-memory: keluar program = data hilang.
+    Dokumen lengkap: <a href="docs/PRD.md">PRD</a> · <a href="docs/ARCHITECTURE.md">Arsitektur</a> ·
+    <a href="docs/USAGE.md">Cara pakai</a> · <a href="docs/TESTING.md">Testing</a> ·
+    <a href="docs/diagrams.html">Diagram</a> · slide UAS
+    <a href="docs/Kelompok2_PPTUTS_B.pdf">Kelompok2_PPTUTS_B.pdf</a>.</p>
+  </section>
+</main>
+
+<footer>
+  <p><strong>DAOS</strong> — Kelompok 2: Muhammad Rizki · Siti Fildzahra Revani ·
+  Nabil Aulia Dika · Irvan Almidar. UAS Praktikum Struktur Data dan Algoritma B.</p>
+  <p><a href="https://github.com/dezzorigin/dao-student-marketplace">GitHub</a> ·
+  Lisensi MIT · Landing ini etalase; produknya program C yang dijalankan lokal.</p>
+</footer>
+
+<script src="app.js"></script>
+</body>
+</html>
