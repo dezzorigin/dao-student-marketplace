@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Diagram Arsitektur — DAOS</title>
+<style>
+  body { margin: 0; background: #F4F1ED; color: #23211E;
+    font-family: "IBM Plex Mono", ui-monospace, Menlo, Consolas, monospace; }
+  main { max-width: 920px; margin: 0 auto; padding: 32px 20px 64px; }
+  h1 { font-family: Georgia, serif; font-size: 26px; margin: 0 0 8px; }
+  h1 span { color: #C0392B; }
+  h2 { font-family: Georgia, serif; font-size: 19px; margin: 40px 0 8px; }
+  p { color: #5B6770; font-size: 13px; line-height: 1.7; max-width: 68ch; }
+  figure { margin: 28px 0; }
+  figcaption { color: #5B6770; font-size: 12px; margin-top: 12px; }
+  svg { width: 100%; height: auto; display: block; }
+  .box { fill: #FFFFFF; stroke: #D8D2C8; stroke-width: 1.5; }
+  .box-accent { fill: #FFFFFF; stroke: #C0392B; stroke-width: 1.5; }
+  .box-ok { fill: #FFFFFF; stroke: #2F6B4F; stroke-width: 1.5; }
+  .t { fill: #23211E; font-size: 15px; font-weight: 700; }
+  .s { fill: #5B6770; font-size: 12.5px; }
+  .a { fill: #C0392B; font-size: 12.5px; }
+  .g { fill: #2F6B4F; font-size: 12.5px; }
+  .arrow { stroke: #5B6770; stroke-width: 1.5; fill: none; }
+  .arrow-a { stroke: #C0392B; stroke-width: 1.5; fill: none; }
+  .arrow-g { stroke: #2F6B4F; stroke-width: 1.5; fill: none; }
+  .marker { fill: #5B6770; }
+  .marker-a { fill: #C0392B; }
+  .marker-g { fill: #2F6B4F; }
+  a { color: #C0392B; }
+</style>
+</head>
+<body>
+<main>
+  <h1>Diagram Arsitektur <span>— DAOS</span></h1>
+  <p>Sistem Alokasi Kantong Darah — Double Priority Queue, C11 murni,
+  in-memory. Dua diagram: peta modul dan alur satu kali eksekusi
+  alokasi. Dibuat sebagai HTML+SVG (bukan Mermaid), mengikuti palet
+  landing: kertas kabut, merah denyut, hijau stabil.</p>
+
+  <h2>1. Peta modul &amp; struktur data</h2>
+  <figure>
+  <svg viewBox="0 0 880 430" role="img" aria-label="Peta modul DAOS">
+    <defs>
+      <marker id="m" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 Z" class="marker"/></marker>
+      <marker id="ma" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 Z" class="marker-a"/></marker>
+      <marker id="mg" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 Z" class="marker-g"/></marker>
+    </defs>
+    <!-- main.c -->
+    <rect class="box" x="20" y="30" width="240" height="96" rx="14"/>
+    <text class="t" x="40" y="62">src/main.c</text>
+    <text class="s" x="40" y="86">loop menu CLI (0–5)</text>
+    <text class="s" x="40" y="106">sanitasi pilihan menu</text>
+    <!-- uas.h -->
+    <rect class="box" x="320" y="30" width="240" height="96" rx="14"/>
+    <text class="t" x="340" y="62">src/uas.h</text>
+    <text class="s" x="340" y="86">struct Pasien / Darah /</text>
+    <text class="s" x="340" y="106">Riwayat · MAX_* = 100</text>
+    <!-- uas.c -->
+    <rect class="box-accent" x="620" y="30" width="240" height="96" rx="14"/>
+    <text class="t" x="640" y="62">src/uas.c</text>
+    <text class="s" x="640" y="86">heap · alokasi · menu</text>
+    <text class="s" x="640" y="106">input / tampil</text>
+    <!-- arrows top row -->
+    <path class="arrow" d="M260 78 H318" marker-end="url(#m)"/>
+    <path class="arrow" d="M560 78 H618" marker-end="url(#m)"/>
+    <!-- heap pasien -->
+    <rect class="box-accent" x="20" y="190" width="400" height="110" rx="14"/>
+    <text class="t" x="40" y="222">Antrean Pasien — Max-Heap</text>
+    <text class="s" x="40" y="246">kunci: triage terkecil dulu (1 = KRITIS EKSTREM)</text>
+    <text class="s" x="40" y="266">seri diputus is_emergency · enqueue: heapify_up</text>
+    <text class="a" x="40" y="286">darurat → langsung ke root, lalu heapify_down</text>
+    <!-- heap darah -->
+    <rect class="box" x="460" y="190" width="400" height="110" rx="14"/>
+    <text class="t" x="480" y="222">Stok Darah — Min-Heap</text>
+    <text class="s" x="480" y="246">kunci: sisa hari terkecil dulu</text>
+    <text class="s" x="480" y="266">kantong hampir kedaluwarsa dipakai dulu</text>
+    <text class="s" x="480" y="286">dequeue by index: heapify_up + heapify_down</text>
+    <!-- arrows to heaps -->
+    <path class="arrow-a" d="M700 126 V188" marker-end="url(#ma)"/>
+    <path class="arrow-a" d="M330 126 C330 160 200 160 200 188" marker-end="url(#ma)"/>
+    <!-- riwayat -->
+    <rect class="box-ok" x="240" y="340" width="400" height="70" rx="14"/>
+    <text class="t" x="260" y="372">Riwayat Transaksi (array statis, 100)</text>
+    <text class="g" x="260" y="394">#NNN | Pasien → Darah D… · label “Transaksi #NNN”</text>
+    <path class="arrow-g" d="M440 300 V338" marker-end="url(#mg)"/>
+  </svg>
+  <figcaption>Gambar 1 — main.c memanggil menu di uas.c; uas.c membaca
+  struct dari uas.h dan memelihara dua heap + satu array riwayat.
+  Semua data in-memory; keluar program = data hilang.</figcaption>
+  </figure>
+
+  <h2>2. Alur satu eksekusi alokasi (menu 3)</h2>
+  <figure>
+  <svg viewBox="0 0 880 470" role="img" aria-label="Alur alokasi DAOS">
+    <defs>
+      <marker id="m2" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 Z" class="marker"/></marker>
+      <marker id="ma2" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 Z" class="marker-a"/></marker>
+      <marker id="mg2" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 Z" class="marker-g"/></marker>
+    </defs>
+    <rect class="box" x="240" y="10" width="400" height="56" rx="14"/>
+    <text class="t" x="260" y="44">1 · Guard: antrean / stok kosong?</text>
+    <rect class="box-accent" x="240" y="100" width="400" height="56" rx="14"/>
+    <text class="t" x="260" y="134">2 · Peek root Max-Heap pasien</text>
+    <rect class="box" x="240" y="190" width="400" height="76" rx="14"/>
+    <text class="t" x="260" y="220">3 · Linear Search seluruh stok</text>
+    <text class="s" x="260" y="244">kompatibel ABO? → simpan sisa hari terkecil</text>
+    <rect class="box" x="240" y="300" width="400" height="56" rx="14"/>
+    <text class="t" x="260" y="334">4 · Greedy: indeks sisa hari terkecil</text>
+    <rect class="box-ok" x="240" y="390" width="400" height="56" rx="14"/>
+    <text class="t" x="260" y="424">5 · Dequeue keduanya → catat riwayat</text>
+    <path class="arrow" d="M440 66 V98" marker-end="url(#m2)"/>
+    <path class="arrow-a" d="M440 156 V188" marker-end="url(#ma2)"/>
+    <path class="arrow" d="M440 266 V298" marker-end="url(#m2)"/>
+    <path class="arrow-g" d="M440 356 V388" marker-end="url(#mg2)"/>
+    <!-- fail branch -->
+    <rect class="box-accent" x="20" y="190" width="180" height="76" rx="14"/>
+    <text class="a" x="36" y="220">tidak ada yang</text>
+    <text class="a" x="36" y="240">kompatibel →</text>
+    <text class="a" x="36" y="260">[GAGAL], pasien tetap</text>
+    <path class="arrow-a" d="M240 228 H202" marker-end="url(#ma2)"/>
+    <text class="s" x="36" y="300">ABO: AB terima semua ·</text>
+    <text class="s" x="36" y="320">A terima A/O · B terima B/O ·</text>
+    <text class="s" x="36" y="340">O hanya terima O</text>
+  </svg>
+  <figcaption>Gambar 2 — satu alokasi = O(n) Linear Search atas stok.
+  Pasien tidak dikeluarkan dari antrean bila alokasi gagal.</figcaption>
+  </figure>
+
+  <p><a href="../index.html">← Kembali ke landing</a> ·
+  <a href="ARCHITECTURE.md">ARCHITECTURE.md</a></p>
+</main>
+</body>
+</html>

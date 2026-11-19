@@ -67,6 +67,17 @@ void heapify_up_pasien(int idx) {
     }
 }
 
+// Memperbaiki struktur Max-Heap dari atas ke bawah saat dequeue
+void heapify_down_pasien(int idx) {
+    int tertinggi = idx, kiri = 2 * idx + 1, kanan = 2 * idx + 2;
+    if (kiri < size_pasien && prioritas_pasien_lebih_tinggi(kiri, tertinggi)) tertinggi = kiri;
+    if (kanan < size_pasien && prioritas_pasien_lebih_tinggi(kanan, tertinggi)) tertinggi = kanan;
+    if (tertinggi != idx) {
+        swap_pasien(idx, tertinggi);
+        heapify_down_pasien(tertinggi);
+    }
+}
+
 // Menambah pasien ke antrean (Bypass langsung ke root jika Darurat)
 void enqueue_pasien(Pasien p) {
     if (size_pasien >= MAX_PASIEN) {
@@ -125,7 +136,7 @@ void heapify_down_darah(int idx) {
     }
 }
 
-/ Menambah kantong darah baru ke stok Min-Heap
+// Menambah kantong darah baru ke stok Min-Heap
 void enqueue_darah(Darah d) {
     if (size_darah >= MAX_DARAH) {
         printf("  [!] Stok darah penuh.\n");
@@ -202,18 +213,18 @@ int cari_dan_alokasi_darah(void) {
 
 void menu_input_pasien(void) {
     Pasien p; p.id = id_pasien_counter++;
-    printf("  Nama pasien       : "); scanf(" %63[^\n]", p.nama);
-    do { printf("  Golongan darah    : "); scanf("%3s", p.gol_darah); } while (!validasi_gol_darah(p.gol_darah));
-    do { printf("  Triage (1-5)      : "); scanf("%d", &p.triage); } while (p.triage < 1 || p.triage > 5);
-    printf("  Darurat? (1/0)    : "); scanf("%d", &p.is_emergency);
+    printf("  Nama pasien       : "); int rc_nama = scanf(" %63[^\n]", p.nama); (void) rc_nama;
+    do { printf("  Golongan darah    : "); int rc_gol = scanf("%3s", p.gol_darah); (void) rc_gol; } while (!validasi_gol_darah(p.gol_darah));
+    do { printf("  Triage (1-5)      : "); int rc_triage = scanf("%d", &p.triage); (void) rc_triage; } while (p.triage < 1 || p.triage > 5);
+    printf("  Darurat? (1/0)    : "); int rc_darurat = scanf("%d", &p.is_emergency); (void) rc_darurat;
     enqueue_pasien(p);
     printf("  [OK] Pasien berhasil ditambahkan.\n");
 }
 
 void menu_input_darah(void) {
     Darah d; d.id = id_darah_counter++;
-    do { printf("  Golongan darah    : "); scanf("%3s", d.gol_darah); } while (!validasi_gol_darah(d.gol_darah));
-    do { printf("  Sisa hari (1-365) : "); scanf("%d", &d.sisa_hari); } while (d.sisa_hari < 1 || d.sisa_hari > 365);
+    do { printf("  Golongan darah    : "); int rc_gol_d = scanf("%3s", d.gol_darah); (void) rc_gol_d; } while (!validasi_gol_darah(d.gol_darah));
+    do { printf("  Sisa hari (1-365) : "); int rc_sisa = scanf("%d", &d.sisa_hari); (void) rc_sisa; } while (d.sisa_hari < 1 || d.sisa_hari > 365);
     enqueue_darah(d);
     printf("  [OK] Kantong Darah berhasil ditambahkan.\n");
 }

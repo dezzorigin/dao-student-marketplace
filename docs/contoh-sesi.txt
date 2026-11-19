@@ -1,0 +1,162 @@
+============================================================
+  DAOS - SISTEM ALOKASI KANTONG DARAH
+  Data Analysis & Optimization System
+  Berbasis Tingkat Kritis (Triage) & Kedaluwarsa
+============================================================
+
+  MENU UTAMA:
+------------------------------------------------------------
+  [1] Input Data Pasien
+  [2] Input Kantong Darah
+  [3] Eksekusi Alokasi Darah
+  [4] Tampilkan Antrean Pasien & Stok Darah
+  [5] Tampilkan Riwayat Transaksi
+  [0] Keluar
+------------------------------------------------------------
+  Pilih menu: 
+  Nama pasien       :   Golongan darah    :   Triage (1-5)      :   Darurat? (1/0)    :   [OK] Pasien berhasil ditambahkan.
+
+  MENU UTAMA:
+------------------------------------------------------------
+  [1] Input Data Pasien
+  [2] Input Kantong Darah
+  [3] Eksekusi Alokasi Darah
+  [4] Tampilkan Antrean Pasien & Stok Darah
+  [5] Tampilkan Riwayat Transaksi
+  [0] Keluar
+------------------------------------------------------------
+  Pilih menu: 
+  Nama pasien       :   Golongan darah    :   Triage (1-5)      :   Darurat? (1/0)    :   [OK] Pasien berhasil ditambahkan.
+
+  MENU UTAMA:
+------------------------------------------------------------
+  [1] Input Data Pasien
+  [2] Input Kantong Darah
+  [3] Eksekusi Alokasi Darah
+  [4] Tampilkan Antrean Pasien & Stok Darah
+  [5] Tampilkan Riwayat Transaksi
+  [0] Keluar
+------------------------------------------------------------
+  Pilih menu: 
+  Nama pasien       :   Golongan darah    :   Triage (1-5)      :   Darurat? (1/0)    :   [OK] Pasien berhasil ditambahkan.
+
+  MENU UTAMA:
+------------------------------------------------------------
+  [1] Input Data Pasien
+  [2] Input Kantong Darah
+  [3] Eksekusi Alokasi Darah
+  [4] Tampilkan Antrean Pasien & Stok Darah
+  [5] Tampilkan Riwayat Transaksi
+  [0] Keluar
+------------------------------------------------------------
+  Pilih menu: 
+  Golongan darah    :   Sisa hari (1-365) :   [OK] Kantong Darah berhasil ditambahkan.
+
+  MENU UTAMA:
+------------------------------------------------------------
+  [1] Input Data Pasien
+  [2] Input Kantong Darah
+  [3] Eksekusi Alokasi Darah
+  [4] Tampilkan Antrean Pasien & Stok Darah
+  [5] Tampilkan Riwayat Transaksi
+  [0] Keluar
+------------------------------------------------------------
+  Pilih menu: 
+  Golongan darah    :   Sisa hari (1-365) :   [OK] Kantong Darah berhasil ditambahkan.
+
+  MENU UTAMA:
+------------------------------------------------------------
+  [1] Input Data Pasien
+  [2] Input Kantong Darah
+  [3] Eksekusi Alokasi Darah
+  [4] Tampilkan Antrean Pasien & Stok Darah
+  [5] Tampilkan Riwayat Transaksi
+  [0] Keluar
+------------------------------------------------------------
+  Pilih menu: 
+  Golongan darah    :   Sisa hari (1-365) :   [OK] Kantong Darah berhasil ditambahkan.
+
+  MENU UTAMA:
+------------------------------------------------------------
+  [1] Input Data Pasien
+  [2] Input Kantong Darah
+  [3] Eksekusi Alokasi Darah
+  [4] Tampilkan Antrean Pasien & Stok Darah
+  [5] Tampilkan Riwayat Transaksi
+  [0] Keluar
+------------------------------------------------------------
+  Pilih menu: 
+  EKSEKUSI ALOKASI DARAH
+------------------------------------------------------------
+
+  Pasien Prioritas Tertinggi: Budi Santoso (Gol: O)
+------------------------------------------------------------
+  [SUKSES] Kantong D001 dialokasikan ke Pasien P002.
+
+  MENU UTAMA:
+------------------------------------------------------------
+  [1] Input Data Pasien
+  [2] Input Kantong Darah
+  [3] Eksekusi Alokasi Darah
+  [4] Tampilkan Antrean Pasien & Stok Darah
+  [5] Tampilkan Riwayat Transaksi
+  [0] Keluar
+------------------------------------------------------------
+  Pilih menu: 
+  EKSEKUSI ALOKASI DARAH
+------------------------------------------------------------
+
+  Pasien Prioritas Tertinggi: Ayu Lestari (Gol: B)
+------------------------------------------------------------
+  [SUKSES] Kantong D002 dialokasikan ke Pasien P001.
+
+  MENU UTAMA:
+------------------------------------------------------------
+  [1] Input Data Pasien
+  [2] Input Kantong Darah
+  [3] Eksekusi Alokasi Darah
+  [4] Tampilkan Antrean Pasien & Stok Darah
+  [5] Tampilkan Riwayat Transaksi
+  [0] Keluar
+------------------------------------------------------------
+  Pilih menu: 
+============================================================
+  ANTREAN PASIEN (Max-Heap) & STOK DARAH (Min-Heap)
+============================================================
+
+  [ANTREAN PASIEN]
+  1. P003 | Citra Dewi | Gol: A | Triage: 4 | Darurat: Tidak
+
+  [STOK KANTONG DARAH]
+  1. D003 | Gol: A | Sisa: 12 hari
+============================================================
+
+  MENU UTAMA:
+------------------------------------------------------------
+  [1] Input Data Pasien
+  [2] Input Kantong Darah
+  [3] Eksekusi Alokasi Darah
+  [4] Tampilkan Antrean Pasien & Stok Darah
+  [5] Tampilkan Riwayat Transaksi
+  [0] Keluar
+------------------------------------------------------------
+  Pilih menu: 
+============================================================
+  RIWAYAT TRANSAKSI
+============================================================
+  #001 | Pasien: Budi Santoso -> Darah: D001
+  #002 | Pasien: Ayu Lestari -> Darah: D002
+
+  MENU UTAMA:
+------------------------------------------------------------
+  [1] Input Data Pasien
+  [2] Input Kantong Darah
+  [3] Eksekusi Alokasi Darah
+  [4] Tampilkan Antrean Pasien & Stok Darah
+  [5] Tampilkan Riwayat Transaksi
+  [0] Keluar
+------------------------------------------------------------
+  Pilih menu: 
+============================================================
+  Program dihentikan. Total transaksi: 2.
+============================================================
