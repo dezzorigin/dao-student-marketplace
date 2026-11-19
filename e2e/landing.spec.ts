@@ -35,7 +35,9 @@ test("tombol salin perintah build menyalin 'make'", async ({ page }) => {
   await page.getByRole("button", { name: "Salin perintah make" }).click();
   const clip = await page.evaluate(() => navigator.clipboard.readText());
   expect(clip).toBe("make");
-  await expect(page.getByRole("button", { name: "Tersalin" }).first()).toBeVisible();
+  // Tombol punya aria-label ("Salin perintah make") yang mengalahkan teks
+  // sebagai accessible name — jadi "Tersalin" dicek lewat teks, bukan role.
+  await expect(page.locator("button[data-copy='make']")).toContainText("Tersalin");
 });
 
 test("mobile 390px: tanpa scroll horizontal", async ({ page }) => {
