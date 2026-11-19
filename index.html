@@ -17,7 +17,7 @@
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=IBM+Plex+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&amp;family=IBM+Plex+Mono:wght@400;500;700&amp;display=swap" rel="stylesheet">
 <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -58,7 +58,7 @@
       darah. Semua nama pasien di halaman ini data contoh (fiktif).</p>
     </div>
 
-    <div class="board" id="papan" aria-label="Papan triase — contoh dari sesi demo">
+    <div class="board" id="papan">
       <div class="board-head">
         <h2>Papan triase</h2>
         <span class="board-tag">contoh · data fiktif</span>
@@ -179,7 +179,7 @@
       <p>Logika yang sama dengan <code>is_kompatibel()</code> di <code>src/uas.c</code> —
       pilih golongan pasien dan golongan kantong, lihat hasilnya.</p>
     </div>
-    <form class="abo-form" id="abo-form">
+    <div class="abo-form" id="abo-form">
       <label> Golongan pasien
         <select id="abo-pasien" name="pasien">
           <option value="A">A</option>
@@ -198,7 +198,7 @@
         </select>
       </label>
       <p class="abo-result" id="abo-result" role="status" aria-live="polite"></p>
-    </form>
+    </div>
   </section>
 
   <!-- ══ Sesi demo asli ══ -->
@@ -210,7 +210,7 @@
       <code>scripts/demo-input.txt</code> — baris-baris di bawah ini persis
       yang dicetak program. <a href="docs/contoh-sesi.txt">Output lengkap 162 baris →</a></p>
     </div>
-    <div class="terminal" role="region" aria-label="Output sesi demo DAOS">
+    <section class="terminal" aria-label="Output sesi demo DAOS">
       <div class="terminal-bar">
         <span class="dot" aria-hidden="true"></span><span class="dot" aria-hidden="true"></span><span class="dot" aria-hidden="true"></span>
         <span class="terminal-title">./daos &lt; scripts/demo-input.txt</span>
@@ -241,7 +241,7 @@
   #002 | Pasien: Ayu Lestari -&gt; Darah: D002
 
   Program dihentikan. Total transaksi: 2.</pre>
-    </div>
+    </section>
   </section>
 
   <!-- ══ Instalasi ══ -->
